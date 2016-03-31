@@ -8,6 +8,7 @@ defmodule Mixgraph.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: Mixgraph],
+     description: description,
      package: package,
      deps: deps]
   end
