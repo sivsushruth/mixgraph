@@ -13,17 +13,10 @@ defmodule Mixgraph do
     IO.puts "Example `mixgraph --package=hackney` "
   end
 
-  def get_package_version(package) do
-    HexApi.get(package).body[:releases] 
-    |> Enum.at(0)
-    |> Map.fetch!("version")
-  end
-
   def package_graph(package) do
     package
     |> get_package_deps
     |> get_connections
-    |> create_graph
     |> append_single_entries
     |> GraphPlot.plot
   end
@@ -44,44 +37,37 @@ defmodule Mixgraph do
     [parent] ++ children
   end
 
-  def create_graph(connections) do
+  def get_connections(connections) do
     connections
     |> List.flatten
-    |> Enum.group_by(fn {package, deps} -> package end)
-    |> Enum.map(fn x -> create_edges(x) end)
+    |> Enum.uniq
   end
 
-  def create_edges({parent, children}) do
-    child_list = children
-    |> Enum.map(fn {_, child} -> child end)
-    {parent, child_list}
-  end
-
-  def get_connections({package, deps}) do
-    deps
-    |> Enum.map(fn x -> create_connection(package, x) end)
-  end
-
-  def create_connection(package, {dep, []}) do
-    {package, dep}
-  end
-
-  def create_connection(package, {dep, sub_deps}) do
-    get_connections({dep, sub_deps})
+  def get_package_version(package) do
+    HexApi.get(package).body[:releases] 
+    |> Enum.at(0)
+    |> Map.fetch!("version")
   end
 
   def get_package_deps(package) do
     package 
     |> get_package_version  
-    |> get_package_deps(package)
+    |> get_package_deps(package, [])
   end
 
-  def get_package_deps(version, package) do
-    deps = HexApi.get(package <> "/releases/" <> version).body[:requirements]
+  def get_package_deps(package, packages) do
+    package 
+    |> get_package_version  
+    |> get_package_deps(package, packages)
+  end
+
+  def get_package_deps(version, package, packages) do
+    children = HexApi.get(package <> "/releases/" <> version).body[:requirements]
     |> Map.keys
-    |> Enum.map(fn x -> Task.async(fn -> get_package_deps(x) end) end)
-    |> Enum.map(fn x -> Task.await(x) end)
-    {package, deps}
+    nested_children = children
+    |> Enum.map(fn x -> Task.async(fn -> get_package_deps(x, packages ++ [{package, children}]) end) end)
+    |> Enum.map(fn x -> Task.await(x, 10000) end)
+    packages ++ nested_children
   end
 
   defp parse_args(args) do

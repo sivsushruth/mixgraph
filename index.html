@@ -62,7 +62,7 @@
       node = svg.append("g").selectAll(".node");
 
   var classes = [
-  {"name": "ssl_verify_fun", "imports": []}, {"name": "mimerl", "imports": []}, {"name": "metrics", "imports": []}, {"name": "idna", "imports": []}, {"name": "certifi", "imports": []}, {"name": "hackney", "imports": ["ssl_verify_fun", "mimerl", "metrics", "idna", "certifi"]}
+  {"name": "comeonin", "imports": []}, {"name": "cowlib", "imports": []}, {"name": "ranch", "imports": []}, {"name": "decimal", "imports": []}, {"name": "poison", "imports": []}, {"name": "poolboy", "imports": []}, {"name": "sbroker", "imports": []}, {"name": "connection", "imports": []}, {"name": "addict", "imports": ["comeonin", "cowboy", "ecto", "mailgun", "phoenix"]}, {"name": "cowboy", "imports": ["cowlib", "ranch"]}, {"name": "ecto", "imports": ["decimal", "mariaex", "poison", "poolboy", "postgrex", "sbroker"]}, {"name": "mariaex", "imports": ["db_connection", "decimal"]}, {"name": "db_connection", "imports": ["connection", "poolboy", "sbroker"]}, {"name": "postgrex", "imports": ["connection", "db_connection", "decimal"]}, {"name": "mailgun", "imports": ["poison"]}, {"name": "phoenix", "imports": ["cowboy", "plug", "poison"]}, {"name": "plug", "imports": ["cowboy"]}
   ];
 
   var nodes = cluster.nodes(packageHierarchy(classes)),
