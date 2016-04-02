@@ -1,12 +1,29 @@
 # Mixgraph
 
 Create a dependency graph for any hex package published in hex.pm
-As easy as `./mixgraph --package=hackney`
-![Image of interactive graph for hackney](http://i.imgur.com/BE8hQH3.png)
 
-## Installation
+As easy as `./mixgraph --package=addict`
+![Image of interactive graph for addict](http://i.imgur.com/cfrWRMO.png)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+### Installation and Usage
+
+View [the module](https://github.com/sivsushruth/mixgraph/blob/master/lib/mixgraph.ex) to see list of available function calls.
+
+Steps to generate using an escript:
+```
+git clone https://github.com/sivsushruth/mixgraph
+cd mixgraph
+mix deps.get
+mix escript.build
+./mixgraph --package=<package_name>
+```
+You can also do `Mixgraph.package_graph("<package_name>")`
+```
+Mixgraph.package_graph("addict")
+```
+
+
+The [package](https://hex.pm/packages/mixgraph) can also be installed as:
 
   1. Add mixgraph to your list of dependencies in `mix.exs`:
 
@@ -19,17 +36,15 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
         def application do
           [applications: [:mixgraph]]
         end
+        
+### TODO
+- [ ] Read dependencies from a local mix.exs
+- [ ] Improve ease of installation as a command line tool
 
-View [the module](https://github.com/sivsushruth/mixgraph/blob/master/lib/mixgraph.ex) to see list of available function calls.
-Steps to generate using an escript:
-```
-git clone https://github.com/sivsushruth/mixgraph
-cd mixgraph
-mix deps.get
-mix escript.build
-./mixgraph --package=<package_name>   #./mixgraph --package=hackney
-```
-You can also do 
-```
-Mixgraph.package_graph("hackney")
-```
+### Help
+* Clone repo and test the project
+* Submit bug reports
+* Provide suggestions for next release
+* Help with completing the TODO
+
+
